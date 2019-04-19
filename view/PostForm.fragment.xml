@@ -1,0 +1,37 @@
+<core:FragmentDefinition
+   xmlns="sap.m"
+   xmlns:core="sap.ui.core" >
+   <Dialog
+      title="Post a Document">
+      
+<VBox class="sapUiSmallMargin">
+            <Label text="Title"  required="true"/>
+            <Input id="InputTitle" value="{oModel>/Title}" />
+
+            <Label text="Price"  required="true"/>
+            <Input id="InputPrice" value="{oModel>/Price}" />
+
+            <Label text="Category"  required="true"/>            
+            <ComboBox id = "ComboBoxCategory" width = "100%"
+                showSecondaryValues= "false"
+                selectedKey="{oModel>/Category}"
+                items="{
+                    path: '/Categories',
+                    sorter: { path: 'CategoryID' }
+                }">
+                <core:ListItem key="{CategoryID}" text="{Name}" additionalText = "{Name}"/>
+            </ComboBox>
+
+            <Label text="Contact" />
+            <Input id="InputContact" value="{oModel>/Contact}" />
+
+            <Label text="Description" />
+            <TextArea id="InputDescription" value="{oModel>/Description}" width = "100%" />
+</VBox>   
+
+  <buttons>
+      <Button id="btnSave" text="Save" press="onPostFormSave"/>
+      <Button id="btnCancel" text="Cancel" press="onPostFormCancel"/>
+  </buttons>
+   </Dialog>
+</core:FragmentDefinition>
