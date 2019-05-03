@@ -9,6 +9,29 @@ app.use(express.static(__dirname));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-var server = app.listen('8081', function() {
-  console.log("Listening On:   http://localhost:8081/");
-});
+var cluster = require('cluster');
+
+if(cluster.isMaster) {
+    var numWorkers = require('os').cpus().length;
+
+    console.log('Master cluster setting up ' + numWorkers + ' workers...');
+
+    for(var i = 0; i < numWorkers; i++) {
+        cluster.fork();
+    }
+
+    cluster.on('online', function(worker) {
+        console.log('Worker ' + worker.process.pid + ' is online');
+    });
+
+    cluster.on('exit', function(worker, code, signal) {
+        console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
+        console.log('Starting a new worker');
+        cluster.fork();
+    });
+} else {
+
+    var server = app.listen(8000, function() {
+        console.log('Process ' + process.pid + ' is listening to all incoming requests on 8000');
+    });
+}
